@@ -25,8 +25,11 @@ class PresencesDataTable extends DataTable
             ->addColumn('tgl', function ($query) {
                 return date('d F Y', strtotime($query->tgl_kegiatan));
             })
+            // ->addColumn('waktu_mulai', function ($query) {
+            //     return date('H:i', strtotime($query->tgl_kegiatan));
+            // })
             ->addColumn('waktu_mulai', function ($query) {
-                return date('H:i', strtotime($query->tgl_kegiatan));
+                return date('H:i', strtotime($query->tgl_kegiatan)) . ' - s.d Selesai';
             })
             ->addColumn('action', function ($query) {
                 $btnDetail = "<a href='" . route('presence.show', $query->id) . "' class='btn btn-secondary'>Detail</a>";
@@ -75,13 +78,20 @@ class PresencesDataTable extends DataTable
     {
         return [
             Column::make('id')
-                ->title('#')
+                ->title('No')
                 ->render('meta.row + meta.settings._iDisplayStart + 1;')
-                ->width(100),
-            Column::make('nama_kegiatan'),
-            Column::make('tgl'),
-            Column::make('waktu_mulai'),
+                ->width(100)
+                ->addClass('text-center'),
+            Column::make('nama_kegiatan')
+            ->addClass('text-center'),
+            Column::make('tgl')->title('Tanggal')
+            ->addClass('text-center'),
+            Column::make('waktu_mulai')->title('Waktu')
+            ->addClass('text-center'),
+            Column::make('tempat')
+            ->addClass('text-center'),
             Column::computed('action')
+                ->title('Aksi')
                 ->exportable(false)
                 ->printable(false)
                 ->width(250)

@@ -6,9 +6,13 @@ use App\Http\Controllers\PresenceDetailController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+// Route::get('/', function () {
+//     return redirect()->route('home');
+// });
 Route::get('/', function () {
-    return redirect()->route('home');
+    return redirect()->route('presence'); // atau langsung '/presence'
 });
+
 
 // Admin
 Route::group(['middleware' => 'auth'], function () {

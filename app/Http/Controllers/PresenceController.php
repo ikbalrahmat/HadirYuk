@@ -44,6 +44,7 @@ class PresenceController extends Controller
         $presence->nama_kegiatan = $request->nama_kegiatan;
         $presence->slug = Str::slug($request->nama_kegiatan);
         $presence->tgl_kegiatan = $request->tgl_kegiatan . ' ' . $request->waktu_mulai;
+        $presence->tempat = $request->tempat;
         $presence->save();
 
         return redirect()->route('presence.index');
@@ -76,12 +77,14 @@ class PresenceController extends Controller
             'nama_kegiatan' => 'required',
             'tgl_kegiatan' => 'required',
             'waktu_mulai' => 'required',
+            'tempat' => 'required',
         ]);
 
         $presence = Presence::findOrFail($id);
         $presence->nama_kegiatan = $request->nama_kegiatan;
         $presence->slug = Str::slug($request->nama_kegiatan);
         $presence->tgl_kegiatan = $request->tgl_kegiatan . ' ' . $request->waktu_mulai;
+        $presence->tempat = $request->tempat;
         $presence->save();
 
         return redirect()->route('presence.index');
