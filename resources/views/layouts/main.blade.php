@@ -121,6 +121,9 @@
 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ route('risalah.index') }}">Risalah</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('presence.index') }}">Riwayat Agenda / Kegiatan</a>
                     </li>
                 </ul>

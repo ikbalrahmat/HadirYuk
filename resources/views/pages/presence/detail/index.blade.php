@@ -106,7 +106,7 @@
 
 
 
-@extends('layouts.main')
+{{-- @extends('layouts.main')
 
 @section('content')
     <div class="container my-4">
@@ -200,6 +200,206 @@
                     }
                 });
             }
+        });
+    </script>
+@endpush --}}
+
+
+{{-- @extends('layouts.main')
+
+@section('content')
+    <div class="container my-4">
+        <div class="bg-light p-4 rounded-4 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="fw-bold text-dark mb-0">Detail Absen</h3>
+                <div class="d-flex gap-2">
+                    <button type="button" onclick="copyLink()" class="btn btn-warning rounded-pill shadow-sm">
+                        <i class="bi bi-clipboard-fill me-1"></i> Copy Link
+                    </button>
+                    <a href="{{ route('presence-detail.export-pdf', $presence->id) }}" target="_blank"
+                        class="btn btn-danger rounded-pill shadow-sm">
+                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> Export to PDF
+                    </a>
+                    <a href="{{ route('presence.index') }}" class="btn btn-secondary rounded-pill shadow-sm">
+                        <i class="bi bi-arrow-left-circle me-1"></i> Kembali
+                    </a>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 mb-3">
+                <div class="card-body bg-white rounded-3">
+                    <table class="table table-borderless mb-0">
+                        <tr>
+                            <td width="180" class="fw-semibold">Agenda/Kegiatan</td>
+                            <td width="20">:</td>
+                            <td>{{ $presence->nama_kegiatan }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-semibold">Tanggal</td>
+                            <td>:</td>
+                            <td>{{ date('d F Y', strtotime($presence->tgl_kegiatan)) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-semibold">Waktu</td>
+                            <td>:</td>
+                            <td>{{ date('H:i', strtotime($presence->tgl_kegiatan)) }} - Sd Selesai</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-semibold">Tempat</td>
+                            <td>:</td>
+                            <td>{{ $presence->tempat }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body bg-white rounded-3">
+                    <div class="table-responsive">
+                        {{ $dataTable->table(['class' => 'table table-borderless table-striped align-middle mb-0']) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@push('js')
+    <script>
+        function copyLink() {
+            navigator.clipboard.writeText("{{ route('absen.index', $presence->slug) }}");
+            alert('Link berhasil dicopy ke clipboard!');
+        }
+    </script>
+
+    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+
+    <script>
+        $(document).ready(function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $(document).on('click', '.btn-delete', function (e) {
+                e.preventDefault();
+                let url = $(this).data('url');
+
+                if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: url,
+                        success: function (response) {
+                            window.location.reload();
+                        },
+                        error: function (xhr) {
+                            alert('Gagal menghapus data!');
+                            console.error(xhr.responseText);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+@endpush --}}
+
+
+@extends('layouts.main')
+
+@section('content')
+    <div class="container my-4">
+        <div class="bg-light p-4 rounded-4 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="fw-bold text-dark mb-0">Detail Absen</h3>
+                <div class="d-flex gap-2">
+                    <button type="button" onclick="copyLink()" class="btn btn-warning rounded-pill shadow-sm">
+                        <i class="bi bi-clipboard-fill me-1"></i> Copy Link
+                    </button>
+                    <a href="{{ route('presence-detail.export-pdf', $presence->id) }}" target="_blank"
+                        class="btn btn-danger rounded-pill shadow-sm">
+                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> Export to PDF
+                    </a>
+                    <a href="{{ route('presence.index') }}" class="btn btn-secondary rounded-pill shadow-sm">
+                        <i class="bi bi-arrow-left-circle me-1"></i> Kembali
+                    </a>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 mb-3">
+                <div class="card-body bg-white rounded-3">
+                    <table class="table table-borderless mb-0">
+                        <tr>
+                            <td width="180" class="fw-semibold">Agenda/Kegiatan</td>
+                            <td width="20">:</td>
+                            <td>{{ $presence->nama_kegiatan }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-semibold">Tanggal</td>
+                            <td>:</td>
+                            <td>{{ date('d F Y', strtotime($presence->tgl_kegiatan)) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-semibold">Waktu</td>
+                            <td>:</td>
+                            <td>{{ date('H:i', strtotime($presence->tgl_kegiatan)) }} - Sd Selesai</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-semibold">Tempat</td>
+                            <td>:</td>
+                            <td>{{ $presence->tempat }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body bg-white rounded-3">
+                    <div class="table-responsive">
+                        {{ $dataTable->table(['class' => 'table table-borderless table-striped align-middle mb-0']) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@push('js')
+    <script>
+        function copyLink() {
+            navigator.clipboard.writeText("{{ route('absen.index', $presence->slug) }}");
+            alert('Link berhasil dicopy ke clipboard!');
+        }
+    </script>
+
+    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+
+    <script>
+        $(document).ready(function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $(document).on('click', '.btn-delete', function (e) {
+                e.preventDefault();
+                let url = $(this).data('url');
+
+                if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: url,
+                        success: function (response) {
+                            window.location.reload();
+                        },
+                        error: function (xhr) {
+                            alert('Gagal menghapus data!');
+                            console.error(xhr.responseText);
+                        }
+                    });
+                }
+            });
         });
     </script>
 @endpush

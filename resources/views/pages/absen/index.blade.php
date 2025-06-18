@@ -815,7 +815,7 @@
 </html> --}}
 
 
-<!doctype html>
+{{-- <!doctype html>
 <html lang="en">
 
 <head>
@@ -930,14 +930,400 @@
 
         <div class="card p-3 d-none" id="table-container">
           <h6 class="fw-semibold mb-3">Daftar Kehadiran</h6>
-          {{-- <div class="table-responsive">
-            <table class="table table-striped table-hover table-sm table-bordered">
-              {{ $dataTable->table() }}
-            </table>
-          </div> --}}
           <div class="table-responsive">
                         {{ $dataTable->table(['class' => 'table table-borderless table-striped align-middle mb-0']) }}
                     </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="{{ asset('js/signature.min.js') }}"></script>
+  <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+  <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
+
+  <script>
+    $(function () {
+      let sigWidth = $('#signature-pad').parent().width();
+      $('#signature-pad').attr('width', sigWidth);
+
+      let signaturePad = new SignaturePad(document.getElementById('signature-pad'), {
+        backgroundColor: 'rgba(255,255,255,0)',
+        penColor: 'rgb(0,0,255)'
+      });
+
+      $('canvas').on('mouseup touchend', function () {
+        $('#signature64').val(signaturePad.toDataURL());
+      });
+
+      $('#clear').on('click', function (e) {
+        e.preventDefault();
+        signaturePad.clear();
+        $('#signature64').val('');
+      });
+
+      $('#toggle-table').on('click', function () {
+        $('#table-container').toggleClass('d-none');
+        $(this).text($('#table-container').hasClass('d-none') ? 'Lihat Daftar Kehadiran' : 'Sembunyikan Daftar Kehadiran');
+      });
+
+      $('#form-absen').on('submit', function () {
+        $(this).find('button[type="submit"]').attr('disabled', true);
+      });
+    });
+  </script>
+
+  {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+</body>
+
+</html> --}}
+
+
+
+
+{{-- <!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ env('APP_NAME') }}</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css">
+  <style>
+    body {
+      background-color: #f5f7fa;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .card {
+      border-radius: 1rem;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: 0.3s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: #333;
+    }
+
+    canvas.signature-pad {
+      width: 100%;
+      height: 150px;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+    }
+
+    .btn-primary,
+    .btn-outline-dark {
+      border-radius: 30px;
+    }
+
+    .table td,
+    .table th {
+      vertical-align: middle;
+    }
+
+    input.form-control {
+      border-radius: 10px;
+      border-color: #dcdcdc;
+    }
+
+    #toggle-table {
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container py-5">
+    <!-- Header Info -->
+    <div class="card p-4 mb-4">
+      <div class="d-flex align-items-center mb-3">
+        <img src="/path/to/logo-bumn.png" alt="Logo BUMN" style="height: 50px;" class="me-3">
+        <img src="/path/to/logo-peruri.png" alt="Logo PERURI" style="height: 50px;" class="me-3">
+        <h4 class="fw-bold mb-0">Daftar Hadir Kegiatan</h4>
+      </div>
+      <table class="table table-borderless mt-2">
+        <tr><td width="160">Agenda</td><td>: {{ $presence->nama_kegiatan }}</td></tr>
+        <tr><td>Tanggal</td><td>: {{ \Carbon\Carbon::parse($presence->tgl_kegiatan)->translatedFormat('l, d F Y') }}</td></tr>
+        <tr><td>Waktu</td><td>: {{ \Carbon\Carbon::parse($presence->tgl_kegiatan)->format('H:i') }} - s.d Selesai</td></tr>
+        <tr><td>Tempat</td><td>: {{ $presence->tempat }}</td></tr>
+      </table>
+    </div>
+
+    <div class="row g-4">
+      <!-- Form Kehadiran -->
+      <div class="col-12">
+        <div class="card p-4">
+          <h5 class="mb-4 fw-semibold">Isi Data Kehadiran</h5>
+          <form id="form-absen" action="{{ route('absen.save', $presence->id) }}" method="POST">
+            @csrf
+
+            <div class="mb-3">
+              <label for="nama" class="form-label">Nama</label>
+              <input type="text" class="form-control" id="nama" name="nama">
+              @error('nama')<div class="text-danger small">{{ $message }}</div>@enderror
+            </div>
+
+            <div class="mb-3">
+              <label for="np" class="form-label">Nomor Pegawai (NP)</label>
+              <input type="text" class="form-control" id="np" name="np">
+              @error('np')<div class="text-danger small">{{ $message }}</div>@enderror
+            </div>
+
+            <div class="mb-3">
+              <label for="jabatan" class="form-label">Jabatan</label>
+              <input type="text" class="form-control" id="jabatan" name="jabatan">
+              @error('jabatan')<div class="text-danger small">{{ $message }}</div>@enderror
+            </div>
+
+            <div class="mb-3">
+              <label for="asal_instansi" class="form-label">Unit Kerja/Instansi</label>
+              <input type="text" class="form-control" id="asal_instansi" name="asal_instansi">
+              @error('asal_instansi')<div class="text-danger small">{{ $message }}</div>@enderror
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Tanda Tangan</label>
+              <div class="form-control p-0 mb-2">
+                <canvas id="signature-pad" class="signature-pad"></canvas>
+              </div>
+              <textarea name="signature" id="signature64" class="d-none"></textarea>
+              @error('signature')<div class="text-danger small">{{ $message }}</div>@enderror
+              <button type="button" class="btn btn-sm btn-outline-secondary" id="clear">Clear Tanda Tangan</button>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3">Submit Kehadiran</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Tabel Kehadiran -->
+      <div class="col-12">
+        <div class="card p-3">
+          <button class="btn btn-outline-dark w-100 mb-3" id="toggle-table">Lihat Daftar Kehadiran</button>
+          <div class="d-none" id="table-container">
+            <h6 class="fw-semibold mb-3">Daftar Kehadiran</h6>
+            <div class="table-responsive">
+              {{ $dataTable->table(['class' => 'table table-borderless table-striped align-middle mb-0']) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="{{ asset('js/signature.min.js') }}"></script>
+  <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+  <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
+
+  <script>
+    $(function () {
+      let sigWidth = $('#signature-pad').parent().width();
+      $('#signature-pad').attr('width', sigWidth);
+
+      let signaturePad = new SignaturePad(document.getElementById('signature-pad'), {
+        backgroundColor: 'rgba(255,255,255,0)',
+        penColor: 'rgb(0,0,255)'
+      });
+
+      $('canvas').on('mouseup touchend', function () {
+        $('#signature64').val(signaturePad.toDataURL());
+      });
+
+      $('#clear').on('click', function (e) {
+        e.preventDefault();
+        signaturePad.clear();
+        $('#signature64').val('');
+      });
+
+      $('#toggle-table').on('click', function () {
+        $('#table-container').toggleClass('d-none');
+        $(this).text($('#table-container').hasClass('d-none') ? 'Lihat Daftar Kehadiran' : 'Sembunyikan Daftar Kehadiran');
+      });
+
+      $('#form-absen').on('submit', function () {
+        $(this).find('button[type="submit"]').attr('disabled', true);
+      });
+    });
+  </script>
+
+  {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+</body>
+
+</html> --}}
+
+
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ env('APP_NAME') }}</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css">
+
+  <style>
+    body {
+      background-color: #f5f7fa;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .card {
+      border-radius: 1rem;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: 0.3s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: #333;
+    }
+
+    canvas.signature-pad {
+      width: 100%;
+      height: 150px;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+    }
+
+    .btn-primary,
+    .btn-outline-dark {
+      border-radius: 30px;
+    }
+
+    .table td,
+    .table th {
+      vertical-align: middle;
+    }
+
+    input.form-control {
+      border-radius: 10px;
+      border-color: #dcdcdc;
+    }
+
+    #toggle-table {
+      border-radius: 10px;
+    }
+
+    .header-logo {
+      height: 50px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    @media (max-width: 768px) {
+      .header-logo {
+        height: 40px;
+      }
+
+      h4.fw-bold {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container py-5">
+    <!-- Header Info -->
+    <div class="card p-4 mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-3 position-relative">
+        <img src="{{ asset('assets/bumn.png') }}" alt="Logo BUMN" class="header-logo">
+        <h4 class="fw-bold position-absolute start-50 translate-middle-x text-center">Daftar Hadir Kegiatan</h4>
+        <img src="{{ asset('assets/logo.png') }}" alt="Logo PERURI" class="header-logo">
+      </div>
+      <table class="table table-borderless mt-2">
+        <tr><td width="160">Agenda</td><td>: {{ $presence->nama_kegiatan }}</td></tr>
+        <tr><td>Tanggal</td><td>: {{ \Carbon\Carbon::parse($presence->tgl_kegiatan)->translatedFormat('l, d F Y') }}</td></tr>
+        <tr><td>Waktu</td><td>: {{ \Carbon\Carbon::parse($presence->tgl_kegiatan)->format('H:i') }} - s.d Selesai</td></tr>
+        <tr><td>Tempat</td><td>: {{ $presence->tempat }}</td></tr>
+      </table>
+    </div>
+
+    <div class="row g-4">
+      <!-- Form Kehadiran -->
+      <div class="col-12">
+        <div class="card p-4">
+          <h5 class="mb-4 fw-semibold">Isi Data Kehadiran</h5>
+
+          @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+          @endif
+
+          <form id="form-absen" action="{{ route('absen.save', $presence->id) }}" method="POST">
+            @csrf
+
+            <div class="mb-3">
+              <label for="nama" class="form-label">Nama</label>
+              <input type="text" class="form-control" id="nama" name="nama">
+              @error('nama')<div class="text-danger small">{{ $message }}</div>@enderror
+            </div>
+
+            <div class="mb-3">
+              <label for="np" class="form-label">Nomor Pegawai (NP)</label>
+              <input type="text" class="form-control" id="np" name="np">
+              @error('np')<div class="text-danger small">{{ $message }}</div>@enderror
+            </div>
+
+            <div class="mb-3">
+              <label for="jabatan" class="form-label">Jabatan</label>
+              <input type="text" class="form-control" id="jabatan" name="jabatan">
+              @error('jabatan')<div class="text-danger small">{{ $message }}</div>@enderror
+            </div>
+
+            <div class="mb-3">
+              <label for="asal_instansi" class="form-label">Unit Kerja/Instansi</label>
+              <input type="text" class="form-control" id="asal_instansi" name="asal_instansi">
+              @error('asal_instansi')<div class="text-danger small">{{ $message }}</div>@enderror
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Tanda Tangan</label>
+              <div class="form-control p-0 mb-2">
+                <canvas id="signature-pad" class="signature-pad"></canvas>
+              </div>
+              <textarea name="signature" id="signature64" class="d-none"></textarea>
+              @error('signature')<div class="text-danger small">{{ $message }}</div>@enderror
+              <button type="button" class="btn btn-sm btn-outline-secondary" id="clear">Clear Tanda Tangan</button>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3">Submit Kehadiran</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Tabel Kehadiran -->
+      <div class="col-12">
+        <div class="card p-3">
+          <button class="btn btn-outline-dark w-100 mb-3" id="toggle-table">Lihat Daftar Kehadiran</button>
+          <div class="d-none" id="table-container">
+            <h6 class="fw-semibold mb-3">Daftar Kehadiran</h6>
+            <div class="table-responsive">
+              {{ $dataTable->table(['class' => 'table table-borderless table-striped align-middle mb-0']) }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
