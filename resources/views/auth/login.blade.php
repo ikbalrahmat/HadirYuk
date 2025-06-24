@@ -88,7 +88,9 @@
     <div class="col-md-6 col-lg-5">
         <div class="card shadow-lg border-0 rounded-4">
             <div class="card-body p-5">
-                <h3 class="text-center mb-4">{{ __('HadirYuk !') }}</h3>
+                <div class="text-center mb-4">
+                    <img src="{{ asset('assets/hadiryuk2.png') }}" alt="Logo HadirYuk" class="img-fluid" style="max-height: 100px;">
+                </div>
 
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
@@ -147,3 +149,4 @@
     </div>
 </div>
 @endsection
+

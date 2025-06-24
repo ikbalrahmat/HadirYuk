@@ -56,7 +56,7 @@ class LoginController extends Controller
      */
     protected function redirectTo()
     {
-        return '/presence'; // Ubah sesuai kebutuhan
+        return '/home'; // Ubah sesuai kebutuhan
     }
 
     // Tambahan (optional): jika ingin mengatur logout

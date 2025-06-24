@@ -259,7 +259,7 @@ class PresenceDetailsDataTable extends DataTable
     {
         return [
             Column::make('id')
-                ->title('#')
+                ->title('No')
                 ->render('meta.row + meta.settings._iDisplayStart + 1;')
                 ->width(100),
             Column::make('presence.nama_kegiatan')

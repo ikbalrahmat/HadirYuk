@@ -65,7 +65,7 @@ class RisalahController extends Controller
     public function index()
     {
         $risalahs = Risalah::latest()->get();
-        return view('pages.risalahdetail.index', compact('risalahs'));
+        return view('pages.risalah.detail.index', compact('risalahs'));
     }
 
     // Menampilkan form tambah risalah
