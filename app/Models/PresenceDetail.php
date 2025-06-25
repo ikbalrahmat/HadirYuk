@@ -30,4 +30,10 @@ class PresenceDetail extends Model
     {
         return $this->belongsTo(Presence::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

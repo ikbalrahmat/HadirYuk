@@ -360,6 +360,7 @@ use App\Http\Controllers\KalkulatorController;
 use App\Http\Controllers\KonsumsiController;
 use App\Http\Controllers\UserController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -403,6 +404,11 @@ Route::middleware(['auth'])->group(function () {
 
     // User Management
     Route::get('/user', [UserController::class, 'index'])->name('user.index');
+    // Route::resource('user', UserController::class)->middleware('auth');
+    // routes/web.php
+    Route::resource('user', \App\Http\Controllers\UserController::class)->middleware('auth');
+
+
 
     // 📅 Presence (Agenda)
     Route::resource('presence', PresenceController::class);

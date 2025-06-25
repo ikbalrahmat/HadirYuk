@@ -101,6 +101,9 @@ class AbsenController extends Controller
         Storage::disk('public_uploads')->put($signaturePath, base64_decode($file_data));
 
         $presenceDetail->tanda_tangan = $signaturePath;
+        if (auth()->check()) {
+            $presenceDetail->user_id = auth()->id();
+        }
         $presenceDetail->save();
 
         return redirect()->back()->with('success', 'Absen berhasil disimpan.');

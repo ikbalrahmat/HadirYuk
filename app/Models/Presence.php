@@ -16,7 +16,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Presence extends Model
 {
-    protected $fillable = ['nama_kegiatan', 'slug', 'tgl_kegiatan', 'tempat'];
+    // protected $fillable = ['nama_kegiatan', 'slug', 'tgl_kegiatan', 'tempat'];
+    protected $fillable = ['nama_kegiatan', 'slug', 'tgl_kegiatan', 'tempat', 'created_by'];
+
 
     public function details()
     {
@@ -26,5 +28,10 @@ class Presence extends Model
     public function photos()
     {
         return $this->hasMany(PresencePhoto::class);
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

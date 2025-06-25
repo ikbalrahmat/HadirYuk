@@ -157,6 +157,7 @@ class PresenceController extends Controller
         $presence->slug = Str::slug($request->nama_kegiatan);
         $presence->tgl_kegiatan = $request->tgl_kegiatan . ' ' . $request->waktu_mulai;
         $presence->tempat = $request->tempat;
+        $presence->created_by = auth()->id();
         $presence->save();
 
         return redirect()->route('presence.index');
@@ -197,6 +198,7 @@ class PresenceController extends Controller
         $presence->slug = Str::slug($request->nama_kegiatan);
         $presence->tgl_kegiatan = $request->tgl_kegiatan . ' ' . $request->waktu_mulai;
         $presence->tempat = $request->tempat;
+        $presence->created_by = auth()->id();
         $presence->save();
 
         return redirect()->route('presence.index');
