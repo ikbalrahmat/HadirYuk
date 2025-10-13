@@ -1,35 +1,5 @@
 <?php
 
-// namespace App\Http\Controllers;
-
-// use App\Models\Survey;
-// use App\Models\SurveyQuestion;
-// use Illuminate\Http\Request;
-
-// class SurveyQuestionController extends Controller
-// {
-//     public function index($surveyId)
-//     {
-//         $survey = Survey::with('questions')->findOrFail($surveyId);
-//         return view('survey_questions.index', compact('survey'));
-//     }
-
-//     public function store(Request $request, $surveyId)
-//     {
-//         $request->validate([
-//             'pertanyaan' => 'required|string',
-//         ]);
-
-//         SurveyQuestion::create([
-//             'survey_id' => $surveyId,
-//             'pertanyaan' => $request->pertanyaan,
-//         ]);
-
-//         return redirect()->back()->with('success', 'Pertanyaan berhasil ditambahkan!');
-//     }
-// }
-
-
 namespace App\Http\Controllers;
 
 use App\Models\Survey;

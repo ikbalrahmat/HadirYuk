@@ -1,39 +1,3 @@
-{{-- @extends('layouts.main')
-
-@section('content')
-<div class="container py-5">
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0">Edit Item Agenda</h5>
-        </div>
-        <div class="card-body">
-
-            <form action="{{ route('agenda.items.update', ['rapat' => $rapat->id, 'agenda' => $agenda->id]) }}" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="mb-3">
-                    <label for="jam" class="form-label">Jam</label>
-                    <input type="text" class="form-control" id="jam" name="jam" value="{{ old('jam', $agenda->jam) }}" required>
-                </div>
-                <div class="mb-3">
-                    <label for="agenda" class="form-label">Agenda</label>
-                    <input type="text" class="form-control" id="agenda" name="agenda" value="{{ old('agenda', $agenda->agenda) }}" required>
-                </div>
-                <div class="mb-3">
-                    <label for="pic" class="form-label">PIC</label>
-                    <input type="text" class="form-control" id="pic" name="pic" value="{{ old('pic', $agenda->pic) }}" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Update Agenda</button>
-
-                <a href="{{ route('agenda.show', $rapat->id) }}" class="btn btn-secondary">Batal</a>
-            </form>
-        </div>
-    </div>
-</div>
-@endsection --}}
-
-
 @extends('layouts.main')
 
 @section('content')

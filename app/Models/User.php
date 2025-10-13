@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'unit_kerja',
+        'created_by',
     ];
 
     /**

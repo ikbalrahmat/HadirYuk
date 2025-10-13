@@ -1,27 +1,3 @@
-{{-- @extends('layouts.main')
-
-@section('content')
-<div class="container py-4">
-    <h2>Isi Survey: {{ $survey->judul }}</h2>
-
-    <form action="{{ route('survey.responses.store', $survey->id) }}" method="POST">
-        @csrf
-        @foreach ($survey->questions as $q)
-            <div class="mb-3">
-                <label class="form-label">{{ $q->pertanyaan }}</label><br>
-                @for ($i = 1; $i <= 5; $i++)
-                    <label>
-                        <input type="radio" name="jawaban_{{ $q->id }}" value="{{ $i }}" required> {{ $i }}
-                    </label>
-                @endfor
-            </div>
-        @endforeach
-        <button class="btn btn-success">Kirim Jawaban</button>
-    </form>
-</div>
-@endsection --}}
-
-
 @extends('layouts.main')
 
 @section('content')

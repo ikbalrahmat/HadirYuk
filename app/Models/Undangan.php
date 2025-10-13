@@ -9,18 +9,8 @@ class Undangan extends Model
 {
     use HasFactory;
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
     protected $table = 'undangan';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'tanggal',
         'jam',
@@ -29,5 +19,11 @@ class Undangan extends Model
         'tempat_link',
         'agenda',
         'tanda_tangan',
+        'user_id'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

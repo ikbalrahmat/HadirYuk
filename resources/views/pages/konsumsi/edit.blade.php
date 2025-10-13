@@ -1,267 +1,3 @@
-{{-- @extends('layouts.main')
-
-@section('content')
-<div class="container-fluid">
-    <h2 class="mb-4">Update Pemesanan Konsumsi</h2>
-    <div class="card">
-        <div class="card-body">
-            <form action="{{ route('konsumsi.update', $konsumsi->id) }}" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="mb-3">
-                    <label for="total_biaya" class="form-label">Total Biaya</label>
-                    <input type="number" class="form-control" id="total_biaya" name="total_biaya" value="{{ old('total_biaya', $konsumsi->total_biaya) }}" required min="0">
-                </div>
-                <div class="mb-3">
-                    <label for="status" class="form-label">Status</label>
-                    <select class="form-select" id="status" name="status">
-                        <option value="Menunggu" {{ $konsumsi->status == 'Menunggu' ? 'selected' : '' }}>Menunggu</option>
-                        <option value="Disetujui" {{ $konsumsi->status == 'Disetujui' ? 'selected' : '' }}>Disetujui</option>
-                        <option value="Selesai" {{ $konsumsi->status == 'Selesai' ? 'selected' : '' }}>Selesai</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Simpan</button>
-                <a href="{{ route('konsumsi.index') }}" class="btn btn-secondary">Batal</a>
-            </form>
-        </div>
-    </div>
-</div>
-@endsection --}}
-
-{{-- @extends('layouts.main')
-
-@section('content')
-<div class="container py-4">
-    <div class="bg-white p-4 rounded-4 shadow-sm">
-        <h3 class="fw-bold mb-4">Edit Pemesanan Konsumsi</h3>
-
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-
-        @if (Auth::user()->hasRole(['admin', 'yanum_karawang', 'yanum_jakarta']))
-        <form action="{{ route('konsumsi.update', $konsumsi->id) }}" method="POST">
-            @csrf
-            @method('PUT')
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="nomor_surat_nde" class="form-label">Nomor Surat NDE</label>
-                    <input type="text" name="nomor_surat_nde" id="nomor_surat_nde" class="form-control" value="{{ $konsumsi->nomor_surat_nde }}" readonly>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="tahun_anggaran_rapat" class="form-label">Tahun Anggaran Rapat</label>
-                    <input type="number" name="tahun_anggaran_rapat" id="tahun_anggaran_rapat" class="form-control" value="{{ $konsumsi->tahun_anggaran_rapat }}" readonly>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label for="agenda_rapat" class="form-label">Agenda Rapat</label>
-                <input type="text" name="agenda_rapat" id="agenda_rapat" class="form-control" value="{{ $konsumsi->agenda_rapat }}" readonly>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="tanggal_rapat" class="form-label">Tanggal Rapat</label>
-                    <input type="date" name="tanggal_rapat" id="tanggal_rapat" class="form-control" value="{{ $konsumsi->tanggal_rapat }}" readonly>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="jam_rapat" class="form-label">Jam Rapat</label>
-                    <input type="time" name="jam_rapat" id="jam_rapat" class="form-control" value="{{ $konsumsi->jam_rapat }}" readonly>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label for="unit_kerja" class="form-label">Unit Kerja</label>
-                <input type="text" name="unit_kerja" id="unit_kerja" class="form-control" value="{{ $konsumsi->unit_kerja }}" readonly>
-            </div>
-
-            <div class="mb-3">
-                <label for="unggah_dokumen_nde" class="form-label">Dokumen NDE</label>
-                @if ($konsumsi->unggah_dokumen_nde)
-                    <a href="{{ asset('storage/' . $konsumsi->unggah_dokumen_nde) }}" target="_blank" class="btn btn-sm btn-primary d-block">Lihat Dokumen</a>
-                @else
-                    <p>Tidak ada dokumen yang diunggah.</p>
-                @endif
-            </div>
-
-            <hr>
-            <h5>Menu Konsumsi</h5>
-            @foreach (json_decode($konsumsi->menu_konsumsi, true) as $menuItem)
-                <div class="row mb-2">
-                    <div class="col-md-5">
-                        <input type="text" class="form-control" value="{{ $menuItem['menu'] }}" readonly>
-                    </div>
-                    <div class="col-md-5">
-                        <input type="text" class="form-control" value="{{ $menuItem['jumlah'] }} Pcs" readonly>
-                    </div>
-                </div>
-            @endforeach
-            <hr>
-
-            <div class="mb-3">
-                <label for="distribusi_tujuan" class="form-label">Distribusi Tujuan</label>
-                <textarea name="distribusi_tujuan" id="distribusi_tujuan" class="form-control" rows="3" readonly>{{ $konsumsi->distribusi_tujuan }}</textarea>
-            </div>
-
-            <div class="mb-3">
-                <label for="catatan" class="form-label">Catatan</label>
-                <textarea name="catatan" id="catatan" class="form-control" rows="3" readonly>{{ $konsumsi->catatan }}</textarea>
-            </div>
-
-            <hr>
-            <h5 class="mt-4">Persetujuan & Biaya</h5>
-            <div class="mb-3">
-                <label for="total_biaya" class="form-label">Total Biaya</label>
-                <input type="number" name="total_biaya" class="form-control" value="{{ $konsumsi->total_biaya ?? 0 }}" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="status" class="form-label">Status</label>
-                <select name="status" id="status" class="form-control" required>
-                    <option value="Menunggu" {{ $konsumsi->status == 'Menunggu' ? 'selected' : '' }}>Menunggu</option>
-                    <option value="Disetujui" {{ $konsumsi->status == 'Disetujui' ? 'selected' : '' }}>Disetujui</option>
-                    <option value="Selesai" {{ $konsumsi->status == 'Selesai' ? 'selected' : '' }}>Selesai</option>
-                </select>
-            </div>
-
-            <div class="d-flex justify-content-end mt-4">
-                <button type="submit" class="btn btn-primary rounded-pill shadow-sm px-4">
-                    <i class="bi bi-save me-1"></i> Update Pemesanan
-                </button>
-            </div>
-
-        </form>
-        @else
-        <div class="alert alert-danger">
-            <h4 class="alert-heading">Akses Ditolak!</h4>
-            <p>Anda tidak memiliki hak akses untuk mengubah pemesanan ini.</p>
-        </div>
-        @endif
-    </div>
-</div>
-@endsection --}}
-
-{{--
-@extends('layouts.main')
-
-@section('content')
-<div class="container py-4">
-    <div class="bg-white p-4 rounded-4 shadow-sm">
-        <h3 class="fw-bold mb-4">Edit Pemesanan Konsumsi</h3>
-
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-        @if(session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
-        @endif
-
-        @if (Auth::user()->hasRole(['admin', 'yanum_karawang', 'yanum_jakarta']))
-        <form action="{{ route('konsumsi.update', $konsumsi->id) }}" method="POST">
-            @csrf
-            @method('PUT')
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Nomor Surat NDE</label>
-                    <input type="text" class="form-control" value="{{ $konsumsi->nomor_surat_nde }}" readonly>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Tahun Anggaran Rapat</label>
-                    <input type="number" class="form-control" value="{{ $konsumsi->tahun_anggaran_rapat }}" readonly>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Agenda Rapat</label>
-                <input type="text" class="form-control" value="{{ $konsumsi->agenda_rapat }}" readonly>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Tanggal Rapat</label>
-                    <input type="date" class="form-control" value="{{ $konsumsi->tanggal_rapat ? $konsumsi->tanggal_rapat->format('Y-m-d') : '' }}" readonly>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Jam Rapat</label>
-                    <input type="time" class="form-control" value="{{ $konsumsi->jam_rapat }}" readonly>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Unit Kerja</label>
-                <input type="text" class="form-control" value="{{ $konsumsi->unit_kerja }}" readonly>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Dokumen NDE</label>
-                @if ($konsumsi->unggah_dokumen_nde)
-                    <a href="{{ asset('storage/' . $konsumsi->unggah_dokumen_nde) }}" target="_blank" class="btn btn-sm btn-primary d-block">Lihat Dokumen</a>
-                @else
-                    <p>Tidak ada dokumen yang diunggah.</p>
-                @endif
-            </div>
-
-            <hr>
-            <h5>Menu Konsumsi</h5>
-            @foreach ($konsumsi->menu_konsumsi as $menuItem)
-                <div class="row mb-2">
-                    <div class="col-md-6">
-                        <input type="text" class="form-control" value="{{ $menuItem['menu'] }} - {{ $menuItem['detail'] ?? '' }}" readonly>
-                    </div>
-                    <div class="col-md-6">
-                        <input type="text" class="form-control" value="{{ $menuItem['jumlah'] }} Pcs" readonly>
-                    </div>
-                </div>
-            @endforeach
-            <hr>
-
-            <div class="mb-3">
-                <label class="form-label">Distribusi Tujuan</label>
-                <textarea class="form-control" rows="3" readonly>{{ $konsumsi->distribusi_tujuan }}</textarea>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Catatan</label>
-                <textarea class="form-control" rows="3" readonly>{{ $konsumsi->catatan }}</textarea>
-            </div>
-
-            <hr>
-            <h5 class="mt-4">Persetujuan & Biaya</h5>
-            <div class="mb-3">
-                <label for="total_biaya" class="form-label">Total Biaya (Rp)</label>
-                <input type="number" name="total_biaya" id="total_biaya" class="form-control" value="{{ old('total_biaya', $konsumsi->total_biaya ?? '') }}" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="status" class="form-label">Status</label>
-                <select name="status" id="status" class="form-control" required>
-                    <option value="Menunggu" {{ $konsumsi->status == 'Menunggu' ? 'selected' : '' }}>Menunggu</option>
-                    <option value="Disetujui" {{ $konsumsi->status == 'Disetujui' ? 'selected' : '' }}>Disetujui</option>
-                    <option value="Selesai" {{ $konsumsi->status == 'Selesai' ? 'selected' : '' }}>Selesai</option>
-                    <option value="Ditolak" {{ $konsumsi->status == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
-                </select>
-            </div>
-
-            <div class="d-flex justify-content-end mt-4">
-                <button type="submit" class="btn btn-primary rounded-pill shadow-sm px-4">
-                    <i class="bi bi-save me-1"></i> Update Pemesanan
-                </button>
-            </div>
-
-        </form>
-        @else
-        <div class="alert alert-danger">
-            <h4 class="alert-heading">Akses Ditolak!</h4>
-            <p>Anda tidak memiliki hak akses untuk mengubah pemesanan ini.</p>
-        </div>
-        @endif
-    </div>
-</div>
-@endsection --}}
-
-
 @extends('layouts.main')
 
 @section('content')
@@ -281,43 +17,57 @@
             @csrf
             @method('PUT')
 
-            {{-- Data Rapat --}}
+            {{-- Data Pemesan dan Rapat --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Nama Pemesan</label>
+                    <input type="text" value="{{ $konsumsi->nama_pemesan ?? 'N/A' }}" readonly
+                           class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Jumlah Peserta</label>
+                    <input type="text" value="{{ $konsumsi->jumlah_peserta ?? 'N/A' }}" readonly
+                           class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Layout Ruangan</label>
+                    <input type="text" value="{{ $konsumsi->layout_ruangan ?? 'N/A' }}" readonly
+                           class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm">
+                </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Nomor Surat NDE</label>
                     <input type="text" value="{{ $konsumsi->nomor_surat_nde }}" readonly
-                        class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                           class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Tahun Anggaran Rapat</label>
                     <input type="number" value="{{ $konsumsi->tahun_anggaran_rapat }}" readonly
-                        class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                           class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Unit Kerja</label>
+                    <input type="text" value="{{ $konsumsi->unit_kerja }}" readonly
+                           class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm">
                 </div>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">Agenda Rapat</label>
                 <input type="text" value="{{ $konsumsi->agenda_rapat }}" readonly
-                    class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm">
+                       class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm">
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Tanggal Rapat</label>
                     <input type="date" value="{{ $konsumsi->tanggal_rapat ? $konsumsi->tanggal_rapat->format('Y-m-d') : '' }}" readonly
-                        class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm">
+                           class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Jam Rapat</label>
                     <input type="time" value="{{ $konsumsi->jam_rapat }}" readonly
-                        class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm">
+                           class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm">
                 </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Unit Kerja</label>
-                <input type="text" value="{{ $konsumsi->unit_kerja }}" readonly
-                    class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm">
             </div>
 
             <div>
@@ -335,13 +85,52 @@
             {{-- Menu Konsumsi --}}
             <hr class="my-6 border-gray-200">
             <h5 class="font-semibold text-lg">Menu Konsumsi</h5>
-            <div class="space-y-2">
-                @foreach ($konsumsi->menu_konsumsi as $menuItem)
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" value="{{ $menuItem['menu'] }} - {{ $menuItem['detail'] ?? '' }}" readonly
-                            class="w-full rounded-md border-gray-300 bg-gray-100 shadow-sm">
-                        <input type="text" value="{{ $menuItem['jumlah'] }} Pcs" readonly
-                            class="w-full rounded-md border-gray-300 bg-gray-100 shadow-sm">
+            <div class="space-y-4">
+                @foreach ($konsumsi->menu_konsumsi as $index => $menuItem)
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                        {{-- Nama & Detail Menu --}}
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 sr-only">Menu</label>
+                            <input type="text" value="{{ $menuItem['menu'] }} - {{ $menuItem['detail'] ?? '' }}" readonly
+                                   class="w-full rounded-md border-gray-300 bg-gray-100 shadow-sm px-3 py-2">
+                            <input type="hidden" name="menu_konsumsi[{{ $index }}][menu]" value="{{ $menuItem['menu'] }}">
+                            <input type="hidden" name="menu_konsumsi[{{ $index }}][detail]" value="{{ $menuItem['detail'] ?? '' }}">
+                        </div>
+
+                        {{-- Jumlah (Pcs) --}}
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 sr-only">Jumlah</label>
+                            <input type="text" value="{{ $menuItem['jumlah'] }} Pcs" readonly
+                                   class="w-full rounded-md border-gray-300 bg-gray-100 shadow-sm px-3 py-2">
+                            <input type="hidden" name="menu_konsumsi[{{ $index }}][jumlah]" value="{{ $menuItem['jumlah'] }}">
+                        </div>
+
+                        {{-- Biaya per Item + Format Rupiah --}}
+                        <div class="flex items-center gap-2">
+                            <input type="number" name="menu_konsumsi[{{ $index }}][biaya]" id="biaya_{{ $index }}"
+                                   value="{{ $menuItem['biaya'] ?? 0 }}"
+                                   class="hidden">
+                            <div class="w-full relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">Rp</span>
+                                <input type="text" id="biaya_display_{{ $index }}"
+                                       value="{{ number_format($menuItem['biaya'] ?? 0, 0, ',', '.') }}"
+                                       class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 pl-9 pr-3">
+                            </div>
+                        </div>
+
+                        {{-- Input File dan Tombol OCR --}}
+                        <div class="md:col-span-4 flex items-center gap-2 mt-2">
+                             <input type="file" id="file-input-{{ $index }}" accept="image/*" class="w-full border rounded-lg px-3 py-2 text-sm">
+                             <button type="button" onclick="processImage({{ $index }})"
+                                     class="px-3 py-2 bg-purple-600 text-white text-xs font-medium rounded-lg shadow hover:bg-purple-700 transition flex-shrink-0">
+                                 <i class="fa fa-receipt mr-1"></i> Proses Nota
+                             </button>
+                        </div>
+
+                        {{-- Loading Indicator --}}
+                        <div id="loading-{{ $index }}" class="md:col-span-4 text-center text-gray-500 text-sm hidden">
+                            <i class="fa fa-spinner fa-spin"></i> Memproses nota, tunggu sebentar...
+                        </div>
                     </div>
                 @endforeach
             </div>
@@ -360,15 +149,21 @@
                     class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm">{{ $konsumsi->catatan }}</textarea>
             </div>
 
-            {{-- Persetujuan & Biaya --}}
+            {{-- Persetujuan & Biaya (BARU) --}}
             <hr class="my-6 border-gray-200">
             <h5 class="font-semibold text-lg">Persetujuan & Biaya</h5>
-            <div>
-                <label for="total_biaya" class="block text-sm font-medium text-gray-700">Total Biaya (Rp)</label>
-                <input type="number" name="total_biaya" id="total_biaya"
-                    value="{{ old('total_biaya', $konsumsi->total_biaya ?? '') }}" required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+
+            @if($anggaran)
+            <div class="p-4 bg-blue-50 text-blue-800 rounded-md">
+                <p class="text-sm font-medium">Saldo Anggaran Tersedia: <strong>Rp {{ number_format($anggaran->saldo_saat_ini, 0, ',', '.') }}</strong></p>
+                <p class="text-sm font-medium mt-1">Total Biaya Pemesanan: <strong id="total_biaya_display" class="{{ $konsumsi->total_biaya > $anggaran->saldo_saat_ini ? 'text-red-600' : 'text-green-600' }}">Rp {{ number_format($konsumsi->total_biaya, 0, ',', '.') }}</strong></p>
+                @if($konsumsi->total_biaya > $anggaran->saldo_saat_ini)
+                    <p class="text-xs text-red-600 italic mt-1">Total biaya melebihi saldo anggaran yang tersedia.</p>
+                @endif
             </div>
+            @endif
+
+            <input type="hidden" name="total_biaya" id="total_biaya_hidden" value="{{ $konsumsi->total_biaya }}">
 
             <div>
                 <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
@@ -396,4 +191,114 @@
         @endif
     </div>
 </div>
+
+{{-- Script untuk Tesseract.js --}}
+<script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+<script>
+    function processImage(index) {
+        const fileInput = document.getElementById(`file-input-${index}`);
+        const loading = document.getElementById(`loading-${index}`);
+        const menuBiayaInput = document.getElementById(`biaya_${index}`);
+        const menuBiayaDisplay = document.getElementById(`biaya_display_${index}`);
+
+        if (fileInput.files.length === 0) {
+            alert('Silakan pilih file gambar nota terlebih dahulu.');
+            return;
+        }
+
+        const imageFile = fileInput.files[0];
+        loading.classList.remove('hidden');
+
+        Tesseract.recognize(
+            imageFile,
+            'eng+ind',
+            { logger: m => console.log(m) }
+        ).then(({ data: { text } }) => {
+            console.log(text);
+            loading.classList.add('hidden');
+            const total = extractTotalFromText(text);
+
+            if (total) {
+                // Isi input number hidden
+                menuBiayaInput.value = total;
+                // Isi input text display dengan format rupiah
+                menuBiayaDisplay.value = new Intl.NumberFormat('id-ID').format(total);
+
+                // Hitung ulang total biaya keseluruhan
+                updateTotalBiaya();
+
+                alert(`Total biaya ditemukan: Rp ${new Intl.NumberFormat('id-ID').format(total)}`);
+            } else {
+                alert('Total biaya tidak ditemukan. Silakan masukkan manual.');
+            }
+        }).catch(err => {
+            console.error('OCR Error:', err);
+            loading.classList.add('hidden');
+            alert('Terjadi kesalahan saat memproses gambar. Silakan coba lagi atau masukkan biaya manual.');
+        });
+    }
+
+    function extractTotalFromText(text) {
+        // Regex untuk mencari kata "TOTAL" atau "JUMLAH" diikuti angka
+        const regex = /(?:TOTAL|Total|total|JUMLAH|Jumlah|jumlah)\s*(?:Rp\.?|)\s*([\d\.,]+)/i;
+        const match = text.match(regex);
+        if (match) {
+            // Bersihkan string dari non-angka (kecuali koma/titik)
+            const cleanString = match[1].replace(/,/g, '').replace(/\./g, '');
+            return parseInt(cleanString);
+        }
+
+        // Jika tidak ketemu, coba regex lain untuk mencari angka terbesar
+        const allNumbers = text.match(/\d{3,}/g); // Cari angka dengan 3 digit atau lebih
+        if (allNumbers && allNumbers.length > 0) {
+            const largestNumber = Math.max(...allNumbers.map(n => parseInt(n)));
+            return largestNumber;
+        }
+        return null;
+    }
+
+    // Fungsi untuk menghitung ulang total biaya keseluruhan
+    function updateTotalBiaya() {
+        let grandTotal = 0;
+        document.querySelectorAll('input[name^="menu_konsumsi"][name$="[biaya]"]').forEach(input => {
+            grandTotal += parseFloat(input.value) || 0;
+        });
+
+        // Update nilai total biaya di input hidden
+        document.getElementById('total_biaya_hidden').value = grandTotal;
+        // Update nilai total biaya di display
+        document.getElementById('total_biaya_display').textContent = `Rp ${new Intl.NumberFormat('id-ID').format(grandTotal)}`;
+
+        // Cek apakah total biaya melebihi saldo dan beri warna
+        const saldoAwal = {{ $anggaran->saldo_saat_ini ?? 0 }};
+        const totalBiayaDisplay = document.getElementById('total_biaya_display');
+        if (grandTotal > saldoAwal) {
+            totalBiayaDisplay.classList.add('text-red-600');
+            totalBiayaDisplay.classList.remove('text-green-600');
+        } else {
+            totalBiayaDisplay.classList.add('text-green-600');
+            totalBiayaDisplay.classList.remove('text-red-600');
+        }
+    }
+
+    // Panggil fungsi updateTotalBiaya setiap kali ada perubahan di input biaya per menu
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('input[id^="biaya_display_"]').forEach(input => {
+            input.addEventListener('input', function(e) {
+                // Hapus karakter non-angka dan ubah ke input number hidden
+                const numericValue = e.target.value.replace(/[^0-9]/g, '');
+                const index = e.target.id.split('_').pop();
+                document.getElementById(`biaya_${index}`).value = numericValue;
+
+                // Format ulang tampilan input
+                e.target.value = new Intl.NumberFormat('id-ID').format(numericValue);
+
+                updateTotalBiaya();
+            });
+        });
+
+        // Jalankan saat halaman pertama kali dimuat untuk memastikan semua sudah ter-update
+        updateTotalBiaya();
+    });
+</script>
 @endsection
