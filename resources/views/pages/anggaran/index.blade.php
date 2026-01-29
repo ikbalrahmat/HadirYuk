@@ -1,9 +1,9 @@
-@extends('layouts.main')
+{{-- @extends('layouts.main')
 
 @section('content')
 <div class="bg-white rounded-xl shadow p-6">
 
-    {{-- Header --}}
+
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
         <h3 class="text-xl font-bold text-blue-600">Manajemen Anggaran</h3>
         <a href="{{ route('anggaran.create') }}"
@@ -12,7 +12,7 @@
         </a>
     </div>
 
-    {{-- Table --}}
+
     <div class="overflow-x-auto">
         <table class="min-w-full border border-gray-300 text-sm">
             <thead class="bg-blue-600 text-white">
@@ -66,7 +66,7 @@
                     </td>
                 </tr>
 
-                {{-- Modal Top-up --}}
+
                 <div id="modal-{{ $anggaran->id }}" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                     <div class="bg-white rounded-lg shadow-lg w-full max-w-md">
                         <form action="{{ route('anggaran.topup', $anggaran->id) }}" method="POST">
@@ -105,7 +105,7 @@
     </div>
 </div>
 
-{{-- Script Modal --}}
+
 <script>
     function openModal(id) {
         document.getElementById(id).classList.remove('hidden');
@@ -114,4 +114,38 @@
         document.getElementById(id).classList.add('hidden');
     }
 </script>
+@endsection --}}
+
+
+@extends('layouts.main')
+
+@section('content')
+<div class="flex items-center justify-center min-h-[400px]">
+    <div class="text-center p-10 bg-white rounded-2xl shadow-sm border border-gray-100">
+
+
+        <div class="mb-6">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-blue-50 text-blue-600 rounded-full mb-4">
+                <i class="fas fa-tools text-3xl animate-bounce"></i>
+            </div>
+        </div>
+
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">Fitur Sedang Dikembangkan</h1>
+        <p class="text-gray-500 max-w-sm mx-auto mb-8">
+            Halaman <strong>Manajemen Anggaran</strong> saat ini masih dalam proses pengerjaan oleh tim developer.
+        </p>
+
+        <div class="flex justify-center gap-3">
+            <a href="{{ url()->previous() }}"
+               class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition">
+                Kembali
+            </a>
+            <a href="/"
+               class="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition shadow-md shadow-blue-200">
+                Dashboard
+            </a>
+        </div>
+
+    </div>
+</div>
 @endsection

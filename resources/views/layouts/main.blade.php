@@ -390,7 +390,7 @@
             </main>
 
             <footer class="bg-white border-t border-gray-200 text-center py-3 text-sm text-gray-500">
-                &copy; {{ date('Y') }} JoinYuk.
+                &copy; 2025 JoinYuk. All rights reserved.
             </footer>
         </div>
     </div>

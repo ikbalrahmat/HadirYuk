@@ -418,7 +418,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                    <span class="text-muted">&copy; {{ date('Y') }} JoinYuk. All rights reserved.</span>
+                    <span class="text-muted">&copy; 2025 JoinYuk. All rights reserved.</span>
                 </div>
             </div>
         </div>
